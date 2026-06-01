@@ -16,6 +16,8 @@ import jakarta.annotation.Nullable;
 
 public final class Strings {
 
+  private static final String ELLIPSIS = "…";
+
   private Strings() {
     throw new AssertionError("not supported");
   }
@@ -26,5 +28,22 @@ public final class Strings {
 
   public static String nullToEmpty(@Nullable String string) {
     return (string == null) ? "" : string;
+  }
+
+  /**
+   * Truncates {@code value} to at most {@code maxLength} characters, appending a single ellipsis
+   * character (U+2026) when truncation occurs. Returns {@code null} when {@code value} is {@code
+   * null}.
+   *
+   * @throws IllegalArgumentException if {@code maxLength} is less than 1
+   */
+  public static @Nullable String truncate(@Nullable String value, int maxLength) {
+    if (maxLength < 1) {
+      throw new IllegalArgumentException("maxLength must be at least 1, was: " + maxLength);
+    }
+    if (value == null || value.length() <= maxLength) {
+      return value;
+    }
+    return value.substring(0, maxLength - 1) + ELLIPSIS;
   }
 }
