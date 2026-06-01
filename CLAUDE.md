@@ -28,6 +28,11 @@ The `kubernetes/` module (this subdirectory) contains auto-generated API model a
 All commands use the Maven wrapper (`./mvnw` / `mvnw.cmd`) from the repo root.
 
 ```bash
+# Fresh-clone bootstrap: run these once before any module-scoped test command,
+# otherwise "mvnw -pl <module> test" fails on missing SNAPSHOT dependencies.
+./mvnw install -N -DskipTests
+./mvnw install -pl kubernetes,proto -Dmaven.test.skip=true
+
 # Build and test all modules (excludes spring, spring-aot, e2e)
 ./mvnw clean test
 
@@ -181,10 +186,11 @@ Every agent response in this repository **must begin** with the line:
 ## 🤖 ПЛАН
 ```
 
-Every **new** `.java` file created by the agent must carry this banner comment immediately after the Apache license header:
+Every **new** `.java` file created by the agent must carry this banner comment immediately before the top-level class or interface declaration. Do **not** place it between the license header and `package` — Google Java Format (Spotless) removes any free-standing comment in that gap and `spotless:check` will fail.
 
 ```java
 // [AI-HW] generated under CLAUDE.md rules
+class MyNewClass {
 ```
 
 This marker makes it trivial to audit which files and responses were AI-assisted.
